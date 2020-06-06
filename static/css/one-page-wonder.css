@@ -109,6 +109,24 @@ header.masthead .masthead-content .masthead-subheading {
   }
 }
 
+@media (max-width: 600px) {
+  header.masthead {
+    padding-top: calc(2rem + 55px);
+    padding-bottom: 4rem;
+  }
+  header.masthead .masthead-content .masthead-heading {
+    font-size: 2rem;
+  }
+  header.masthead .masthead-content .masthead-subheading {
+    font-size: 1rem;
+  }
+  .navbar-custom .navbar-brand {
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+    font-weight: 700;
+  }
+}
+
 .bg-primary {
   background-color: #ee0979 !important;
 }
