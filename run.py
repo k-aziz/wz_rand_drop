@@ -103,6 +103,7 @@ def generate_drop():
         custom_location_count = 1
         if loc_name and loc_name == "Custom Location":
             loc_name += f" {custom_location_count}"
+            custom_location_count += 1
 
         locations.append(
             Location(
