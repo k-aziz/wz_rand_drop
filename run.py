@@ -98,9 +98,9 @@ def generate_drop():
     data = request.get_json()
 
     locations = []
+    custom_location_count = 1
     for index, location in enumerate(data.get("locations", [])):
         loc_name = location.get("name")
-        custom_location_count = 1
         if loc_name and loc_name == "Custom Location":
             loc_name += f" {custom_location_count}"
             custom_location_count += 1
