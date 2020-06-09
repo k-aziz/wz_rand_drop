@@ -189,3 +189,13 @@ header.masthead .masthead-content .masthead-subheading {
 #genDropBtn {
   margin-top: 2rem !important;
 }
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background-color: rgba(33, 33, 33, 0.7);
+  color: white;
+  text-align: center;
+}
+
+.leaflet-popup-content {
+  font-weight: bold;
+}

@@ -21,8 +21,15 @@ let MAP_ID = 'wzMap'
 // const PORT = "Port";
 // const PRISON = "Prison";
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+
+// referenced from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffleArray(array) {
+    var new_array = array;
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [new_array[i], new_array[j]] = [array[j], array[i]];
+    }
+    return new_array;
 }
 
 function makeStruct(names) {
@@ -137,7 +144,7 @@ $("#genDropBtn").click(function sendLocations(e) {
                 markerLatLng.lat === location.latLng.lat &&
                 markerLatLng.lng === location.latLng.lng
             ) {
-                current_marker.setBouncingOptions({exclusive: true}).bounce();
+                randomBounceAllMarkers(current_marker);
             }
         }
     })
@@ -153,6 +160,7 @@ var widthHeightRatio = 0.9307228915662651
 var originalWidth = 927
 var originalHeight = 996
 
+
 function resize(){
     var map_width = parseInt($("#leafletMap").css("width").replace("px", ""))
     var window_width = $(window).width();
@@ -166,21 +174,22 @@ function resize(){
         $('#leafletMap').css("height", (map_width / originalWidth * originalHeight));
         map.setView(L.latLng(500,500), -0.6);
 
-    } else if (window_width < 768){
+    } else if (window_width < 768 && window_width >= 576){
         $('#leafletMap').css("height", (map_width / originalWidth * originalHeight));
         map.setView(L.latLng(500,500), -1);
+    } else if (window_width < 576){
+        $('#leafletMap').css("height", (map_width / originalWidth * originalHeight));
+        map.setView(L.latLng(500,500), -1.3);
     }
     map.invalidateSize();
     setLocationMarkers();
 }
 
 
-
 function onMapClick(e) {
-    addMarker(e.latlng, "Custom Location")
-
     var location = new Location("Custom Location", e.latlng);
     locations.push(location);
+    addMarker(location);
 }
 
 
@@ -223,6 +232,7 @@ function getNamedLocations() {
     })
 }
 
+
 function setLocationMarkers() {
     // Remove old markers
     for(let i = 0; i < markers.length; i++) {
@@ -233,15 +243,47 @@ function setLocationMarkers() {
     markers = []
     // Add new markers
     for(let i = 0; i < locations.length; i++) {
-        addMarker(locations[i].latLng, locations[i].name);
+        addMarker(locations[i]);
     }
 }
 
-function addMarker(latLng, name) {
-    var marker = L.marker(latLng, {"title": name})
+
+function addMarker(location) {
+    var marker = L.marker(location.latLng, {"title": location.name})
     .addTo(map)
-    .bindPopup(name);
+    .bindPopup(
+        location.name,
+        {
+            closeButton: false
+        }
+    );
     markers.push(marker)
 
     marker.on("contextmenu", onMapRightClick)
+    marker.on("click", function() { marker.openPopup(); })
+}
+
+
+function randomBounceAllMarkers(active_marker) {
+
+    function bounceSingleMarker(marker){
+        marker.bounce(1);
+    }
+    var randomised_markers = shuffleArray(markers)
+    var i = 0;
+
+    function myLoop() {
+        setTimeout(function() {
+            bounceSingleMarker(randomised_markers[i]);
+            i++;
+            if (i < randomised_markers.length) {
+                myLoop();
+            } else if(i === randomised_markers.length) {
+                active_marker.setBouncingOptions({exclusive: true}).bounce();
+                setTimeout(function() { active_marker.openPopup(); }, 1500)
+            }
+        }, 200)
+    }
+
+    myLoop();
 }
