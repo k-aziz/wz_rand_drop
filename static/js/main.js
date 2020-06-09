@@ -257,10 +257,8 @@ function addMarker(location) {
             closeButton: false
         }
     );
-    markers.push(marker)
-
     marker.on("contextmenu", onMapRightClick)
-    marker.on("click", function() { marker.openPopup(); })
+    markers.push(marker)
 }
 
 
