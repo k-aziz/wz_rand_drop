@@ -93,12 +93,7 @@ var Location = makeStruct('name latLng');
 var locations = [];
 var markers = [];
 
-var map = L.map('leafletMap', {
-    crs: L.CRS.Simple,
-    minZoom: -2,
-    zoomDelta: 0.25,
-    zoomSnap: 0.05
-});
+
 
 var yx = L.latLng;
 
@@ -108,14 +103,20 @@ var xy = function(x, y) {
     }
     return yx(y, x);  // When doing xy(x, y);
 };
-
 var bounds = [xy(0, 0), xy(1000, 1000)];
+var map = L.map('leafletMap', {
+    crs: L.CRS.Simple,
+    minZoom: -2,
+    zoomDelta: 0.25,
+    zoomSnap: 0.05,
+    maxBounds: bounds
+});
 var image = L.imageOverlay('/static/img/wz_map.png', bounds).addTo(map);
 map.setView(L.latLng(500,500), -0.5);
 
-window.onload = function(e){ getNamedLocations(); loadMap(); resize(); setMapHandlers();}
+window.onload = function(e){ getNamedLocations(); resize(); setMapHandlers();}
 window.onscroll = function(e){ }
-window.onresize = function(e){ loadMap(); resize(); setMapHandlers();}
+window.onresize = function(e){ resize(); setMapHandlers();}
 
 
 $("#genDropBtn").click(function sendLocations(e) {
@@ -165,21 +166,24 @@ function resize(){
     var map_width = parseInt($("#leafletMap").css("width").replace("px", ""))
     var window_width = $(window).width();
 
-    if(window_width >= 992){
-
-        $('#leafletMap').css("height", originalHeight - 50);
+    if(window_width >= 1200){
+        $('#leafletMap').css("height", originalHeight - 200);
         map.setView(L.latLng(500,500), -0.3);
 
+    } else if (window_width < 1200 && window_width >= 992){
+        $('#leafletMap').css("height", ((map_width / originalWidth) * originalHeight));
+        map.setView(L.latLng(500,500), -0.5);
+
     } else if (window_width < 992 && window_width >= 768){
-        $('#leafletMap').css("height", (map_width / originalWidth * originalHeight));
-        map.setView(L.latLng(500,500), -0.6);
+        $('#leafletMap').css("height", ((map_width / originalWidth) * originalHeight));
+        map.setView(L.latLng(500,500), -0.9);
 
     } else if (window_width < 768 && window_width >= 576){
-        $('#leafletMap').css("height", (map_width / originalWidth * originalHeight));
-        map.setView(L.latLng(500,500), -1);
-    } else if (window_width < 576){
-        $('#leafletMap').css("height", (map_width / originalWidth * originalHeight));
+        $('#leafletMap').css("height", ((map_width / originalWidth) * originalHeight));
         map.setView(L.latLng(500,500), -1.3);
+    } else if (window_width < 576){
+        $('#leafletMap').css("height", ((map_width / originalWidth) * originalHeight));
+        map.setView(L.latLng(500,500), -1.6);
     }
     map.invalidateSize();
     setLocationMarkers();
@@ -284,4 +288,18 @@ function randomBounceAllMarkers(active_marker) {
     }
 
     myLoop();
+}
+
+if ($('.smart-scroll').length > 0) { // check if element exists
+    var last_scroll_top = 0;
+    $(window).on('scroll', function() {
+        var scroll_top = $(this).scrollTop();
+        if(scroll_top < last_scroll_top) {
+            $('.smart-scroll').removeClass('scrolled-down').addClass('scrolled-up');
+        }
+        else {
+            $('.smart-scroll').removeClass('scrolled-up').addClass('scrolled-down');
+        }
+        last_scroll_top = scroll_top;
+    });
 }

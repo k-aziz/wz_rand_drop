@@ -98,7 +98,7 @@ header.masthead .masthead-content .masthead-subheading {
 
 @media (min-width: 992px) {
   header.masthead {
-    padding-top: calc(4rem + 55px);
+    padding-top: calc(2rem + 55px);
     padding-bottom: 10rem;
   }
   header.masthead .masthead-content .masthead-heading {
@@ -163,8 +163,10 @@ header.masthead .masthead-content .masthead-subheading {
 .map-container{
     height: 100%;
     margin-top: 2rem;
-    max-width: 927px;
-    max-height: 996px;
+    max-width: 75%;
+    /* max-height: 80%; */
+    /* max-width: 927px;
+    max-height: 996px; */
     /* display:inline-block; */
     /* width:320px; 
     height:480px; */
@@ -176,15 +178,6 @@ header.masthead .masthead-content .masthead-subheading {
     box-shadow: 0 5px 50px #333 */
 }
 
-
-/* #leafletMap {
-  width: 100px;
-  height:100px;
-  min-height: 300px;
-  max-width: 927px;
-  min-width: 100%;
-  display: block;
-} */
 
 #genDropBtn {
   margin-top: 2rem !important;
@@ -198,4 +191,18 @@ header.masthead .masthead-content .masthead-subheading {
 
 .leaflet-popup-content {
   font-weight: bold;
+}
+
+.smart-scroll{
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+.scrolled-down{
+   transform:translateY(-100%); transition: all 0.3s ease-in-out;
+}
+.scrolled-up{
+   transform:translateY(0); transition: all 0.3s ease-in-out;
 }
