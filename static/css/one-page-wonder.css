@@ -206,3 +206,9 @@ header.masthead .masthead-content .masthead-subheading {
 .scrolled-up{
    transform:translateY(0); transition: all 0.3s ease-in-out;
 }
+
+.jumbotron {
+  background: linear-gradient(0deg, #000000 0%, #727272 100%);
+  margin: 2rem auto;
+  padding: 2rem;
+}
